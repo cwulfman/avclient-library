@@ -1,3 +1,7 @@
+# MacOS
+.DS_Store
+# Editor
+*.*~
 # Logs
 logs
 *.log
