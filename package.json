@@ -1,0 +1,16 @@
+{
+    "name": "avclient",
+    "version": "1.0.0",
+    "description": "test harness software for AV team to use",
+    "scripts": {
+	"test": "mocha test/test.js -w"
+    },
+    "author": "C. E. Wulfman <cliff@osetfoundation.org>",
+    "license": "OSET",
+    "devDependencies": {
+	"chai": "4.3.4",
+	"jsdoc-to-markdown": "7.0.1",
+	"mocha": "9.0.2",
+	"documentation": "13.2.5"
+    }
+}
