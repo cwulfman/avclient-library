@@ -57,17 +57,20 @@ describe('avclient', function () {
 	});
     });
 
-    describe('Send', function() {
+    describe('SendBallotCryptograms', function() {
 	let _ = "";
 	it('returns `otherError` if the current access code is `00005`',
 	   function() {
 	       avclient.currentCode('00005');
-	       expect(avclient.Send(_,_,_)).to.equal(statusCodes.otherError);
+	       result = avclient.SendBallotCryptograms(_);
+	       expect(result.status).to.equal(statusCodes.otherError);
 	   });
 	if('returns `success` for everything else',
 	   function() {
 	       avclient.currentCode('999999');
-	       expect(avclient.Send(_,_,_)).to.equal(statusCodes.success);
+	       result = avclient.SendBallotCryptograms(_);
+	       expect(result.status).to.equal(statusCodes.success);
+	       expect(result.recept).to.equal('AdBoCr1e2m3i');
 	   });
     });
     

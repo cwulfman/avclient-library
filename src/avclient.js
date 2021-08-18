@@ -108,12 +108,14 @@ function SpoilBallotCryptograms() {
  * @param {string} affidavitPDF
  * @return {string} status
  */
-function Send(fingerprint, affidavitPDF, ballotPDF) {
+function SendBallotCryptograms(affidavitPDF) {
     switch(currentCode()) {
     case '00005':
-	return statusCodes.otherError;
+	return {"status": statusCodes.otherError,
+		"receipt": ''};
     default:
-	return statusCodes.success;
+	return {"status": statusCodes.success,
+		"receipt": 'AdBoCr1e2m3i'}
     }
 }
 
@@ -130,13 +132,11 @@ function PurgeData() {
     }
 }
 
-
-
 exports.New = New;
 exports.RequestAccessCode = RequestAccessCode;
 exports.ValidateAccessCode = ValidateAccessCode;
 exports.ConstructBallotCryptograms = ConstructBallotCryptograms;
 exports.SpoilBallotCryptograms = SpoilBallotCryptograms;
-exports.Send = Send;
+exports.SendBallotCryptograms = SendBallotCryptograms;
 exports.PurgeData = PurgeData;
 exports.currentCode = currentCode;
