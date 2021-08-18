@@ -1,61 +1,77 @@
 // avclient.js
 
-const statusCodes = require('./statuscodes').statusCodes
+const statusCodes = require('./statusCodes').statusCodes
 
 /**
- * Request that an access code be sent to the user
- * (outside of th app; e.g. email), based on Voter's 
- * input data.
- * @param {string} firstName voter's first name field
- * @param {string} lastName voter's last name field
- * @param {string} dob voter's date of birth field
- * @param {string} idNo either the ID number the voter used before
- * (DLN, state ID, SSN) or, if no ID number was provided, then
- * the voter record ID number returned by the previous lookup call.
- * @returns {string} status (success or network error)
+ * Provide a URL for the library to use
+ * @param {string} URL
+ * @returns true
  */
-function AccessCodeRequest(firstName, lastName, dob, idNo) {
-    if (idNo.match(/^0+$/))
-	return statusCodes.networkError
+function New(URL) {
+    return true
+}
+
+/**
+ * Request that an access code be sent to the user (outside of th app;
+ * e.g. email), based on Voter’s ID# is either (a) the ID number the
+ * voter used before (DLN, state ID, SSN) or (b) if no ID# was
+ * provided, then provide the voter record ID number returned by the
+ * previous lookup call.
+ * @param {string} IDnumber Voter's ID number
+ * @returns {string} status (success or otherError)
+ */
+function RequestAccessCode(IDnumber) {
+    if (IDnumber.match(/^0+$/))
+	return statusCodes.otherError
     else
 	return statusCodes.success
 }
 
 /**
- * If an input access code is valid, constructs crypto-ballot stuff
- * under the covers and returns a ballot fingerprint.
- * @param {string} CVR
- * @param {string} accessCode
- * @returns {object} Status, Fingerprint
+ * Validate an access code
+ * @param {string} accesCode
+ * @return {string} statuscode
  */
-function AccessCodeConstruct (CVR, accessCode) {
-    var n = 0;
-    let status;
-    let fingerPrint;
-    currentCode(accessCode);
+function ValidateAccessCode(accessCode) {
     switch(accessCode) {
     case '00000':
-	status = statusCodes.invalid;
-	break;
+	return statusCodes.invalidAccessCode;
     case '00001':
-	status = statusCodes.expired;
-	break;
+	return statusCodes.expiredAccessCode;
     case '00002':
-	status = statusCodes.networkError;
-	break;
+	return statusCodes.otherError;
     default:
-	status = statusCodes.success;
-	break;
-    };
-
-    if (status == statusCodes.success)
-	fingerPrint = nextFP();
-    else
-	fingerPrint = '';
-
-    return {'Status': status, 'Fingerprint': fingerPrint};
+	return statusCodes.success;
+    }
 }
 
+/**
+ * Constructs crypto-ballot stuff under the covers,
+ * and returns a ballot fingerprint if return status is "success".
+ * Stub Functionality: Any string will do for the CVR, which is not used in
+ * the stub.  If the access code from the previous call is 00003
+ * return status of “otherError”, and empty fingerprint.  Otherwise
+ * return Status of “success” and a fingerprint that is either of two
+ * values, depending on prior calls; whichever one was returned
+ * previously, use the other one zyx098-wvu765-tsr432-1234 or
+ * tsr432-wvu765-zyx098-4321
+ * @param {string} CVR
+ * @returns {object} Status, Fingerprint
+ */
+function ConstructBallotCryptograms(CVR) {
+    let status;
+    let fingerprint;
+    switch(currentCode()) {
+    case '00003':
+	return {'status': statusCodes.otherError,
+		'fingerprint': ''};
+	break;
+    default:
+	return {'status': statusCodes.success,
+		'fingerprint': nextFP()};
+	break;
+    }
+}
 
 const currentCode = (function(code) {
     var stashed = '';
@@ -75,41 +91,51 @@ const nextFP = (function() {
 /**
  * Purpose: input a ballot fingerprint to invalidate
  * (aka spoil)
- * @param {string} fingerprint
- * @return {string} status (success/invalid/networkError)
+ * @return {string} status (success/otherError)
  */
-function Spoil(fingerPrint) {
+function SpoilBallotCryptograms() {
     switch(currentCode()) {
-    case '00003':
-	return statusCodes.networkError;
     case '00004':
-	return statusCodes.invalid;
+	return statusCodes.otherError;
     default:
 	return statusCodes.success;
     }
 }
 
 /**
- * Purpose: input a ballot fingerprint of a ballot to send, along with
- * a couple files
- * @param {string} fingerprint
+ * Purpose: add a PDF file to the ballot, and send them
  * @param {string} affidavitPDF
- * @param {string} ballotPDF
  * @return {string} status
  */
 function Send(fingerprint, affidavitPDF, ballotPDF) {
     switch(currentCode()) {
     case '00005':
-	return statusCodes.networkError;
-    case '00006':
-	return statusCodes.invalid;
+	return statusCodes.otherError;
     default:
 	return statusCodes.success;
     }
 }
 
-exports.AccessCodeRequest = AccessCodeRequest;
-exports.AccessCodeConstruct = AccessCodeConstruct;
-exports.Spoil = Spoil;
+/**
+ * Call to tell library to purge data
+ * @return {string} status (success or otherError)
+ */
+function PurgeData() {
+    switch(currentCode()) {
+    case '00006':
+	return statusCodes.otherError;
+    default:
+	return statusCodes.success;
+    }
+}
+
+
+
+exports.New = New;
+exports.RequestAccessCode = RequestAccessCode;
+exports.ValidateAccessCode = ValidateAccessCode;
+exports.ConstructBallotCryptograms = ConstructBallotCryptograms;
+exports.SpoilBallotCryptograms = SpoilBallotCryptograms;
 exports.Send = Send;
+exports.PurgeData = PurgeData;
 exports.currentCode = currentCode;

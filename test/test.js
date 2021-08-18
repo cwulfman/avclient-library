@@ -2,80 +2,86 @@ const avclient = require('../src/avclient');
 const statusCodes = require('../src/statusCodes').statusCodes;
 const expect = require('chai').expect;
 
-
-
 describe('avclient', function () {
-    describe('AccessCodeRequest', function () {
-	it('returns `network error` if ID# is all zeros', function() {
-	    expect(avclient.AccessCodeRequest('Jane', 'Doe', '01-01-2001','0')).to.equal(statusCodes.networkError);
-	    expect(avclient.AccessCodeRequest('John', 'Doe', '01-01-2001','000')).to.equal(statusCodes.networkError);
+    describe('New', function() {
+	it('returns true', function() {
+	    expect(avclient.New("anything")).to.be.true;
+	});
+    });
+
+    describe('RequestAccessCode', function () {
+	it('returns `other error` if ID# is all zeros', function() {
+	    expect(avclient.RequestAccessCode('0')).to.equal(statusCodes.otherError);
+	    expect(avclient.RequestAccessCode('000')).to.equal(statusCodes.otherError);
 	});
 
 	it('returns `success` otherwise', function () {
-	    expect(avclient.AccessCodeRequest('Jane', 'Doe', '01-01-2001','12345')).to.equal(statusCodes.success);
+	    expect(avclient.RequestAccessCode('12345')).to.equal(statusCodes.success);
 	});
     });
 
-    describe('AccessCodeConstruct status', function () {
-	let CVR = '_';
-	it('returns `invalid` if accessCode is `00000`', function () {
-	    expect(avclient.AccessCodeConstruct(CVR, '00000').Status).to.equal(statusCodes.invalid)
+    describe('ValidateAccessCode', function () {
+	it('returns invalidAccessCode if accessCode is 00000', function() {
+	    expect(avclient.ValidateAccessCode('00000')).to.equal(statusCodes.invalidAccessCode);
 	});
-	it('returns `expired` if accessCode is `00001`', function () {
-	    expect(avclient.AccessCodeConstruct(CVR, '00001').Status).to.equal(statusCodes.expired)
+	it('returns expiredAccessCode if accessCode is 00001', function() {
+	    accessCode = '00001'
+	    expectedStatus = statusCodes.expiredAccessCode;
+	    expect(avclient.ValidateAccessCode(accessCode)).to.equal(expectedStatus);
+	})
+
+    });
+
+    describe('ConstructBallotCryptograms', function() {
+	it('returns otherError for code 00003', function() {
+	    avclient.currentCode('00003');	    
+	    expect(avclient.ConstructBallotCryptograms('').status).to.equal(statusCodes.otherError);
 	});
-	it('returns `network error` if accessCode is `00002`', function () {
-	    expect(avclient.AccessCodeConstruct(CVR, '00002').Status).to.equal(statusCodes.networkError)
-	});
-	it('returns `success` if accessCode is anything else', function () {
-	    var fprint = avclient.AccessCodeConstruct(CVR, '12345');
-	    expect(fprint.Status).to.equal('success');
-	    expect(fprint.Fingerprint).to.equal('zyx098-wvu765-tsr432-1234');
-	});
-	it('returns alternating fingerprints', function() {
-	    fprint = avclient.AccessCodeConstruct(CVR, '99999');
-	    expect(fprint.Fingerprint).to.equal('tsr432-wvu765-zyx098-4321');
-	    fprint = avclient.AccessCodeConstruct(CVR, '99999');
-	    expect(fprint.Fingerprint).to.equal('zyx098-wvu765-tsr432-1234');
+	it('returns success for anything else (not exhaustively tested)', function() {
+	    avclient.currentCode('00001');	    
+	    expectedStatus = statusCodes.success;
+	    expect(avclient.ConstructBallotCryptograms('').status).to.equal(expectedStatus);
 	});
     });
 
-    describe('Spoil', function() {
-	let CVR = '_';
-	let fingerprint = {'Status': 'a', 'Fingerprint': 'b'};
-	it('returns `network error` if the current access code is `00003`',
-	   function() {
-	       avclient.currentCode('00003');
-	       expect(avclient.Spoil(fingerprint)).to.equal(statusCodes.networkError);
-	   });
-	if('returns `invalid` if the current access code is `00004`',
-	   function() {
-	       avclient.currentCode('00004');
-	       expect(avclient.Spoil(fingerprint)).to.equal(statusCodes.invalid);
-	   });
-	if('returns `success` for everything else',
-	   function() {
-	       avclient.currentCode('999999');
-	       expect(avclient.Spoil(fingerprint)).to.equal(statusCodes.success);
-	   });
+    describe('SpoilBallotCryptograms', function() {
+	it('returns otherError if statusCode is 00004', function() {
+	    avclient.currentCode('00004')
+	    expectedStatus = statusCodes.otherError;
+	    expect(avclient.SpoilBallotCryptograms(accessCode)).to.equal(expectedStatus);
+	});
+	it('returns success for anything else (not exhaustively tested)', function() {
+	    avclient.currentCode('00000')
+	    expectedStatus = statusCodes.success;
+	    expect(avclient.SpoilBallotCryptograms(accessCode)).to.equal(expectedStatus);
+	});
     });
 
     describe('Send', function() {
 	let _ = "";
-	it('returns `network error` if the current access code is `00005`',
+	it('returns `otherError` if the current access code is `00005`',
 	   function() {
 	       avclient.currentCode('00005');
-	       expect(avclient.Send(_,_,_)).to.equal(statusCodes.networkError);
-	   });
-	if('returns `invalid` if the current access code is `00006`',
-	   function() {
-	       avclient.currentCode('00004');
-	       expect(avclient.Send(_,_,_)).to.equal(statusCodes.invalid);
+	       expect(avclient.Send(_,_,_)).to.equal(statusCodes.otherError);
 	   });
 	if('returns `success` for everything else',
 	   function() {
 	       avclient.currentCode('999999');
 	       expect(avclient.Send(_,_,_)).to.equal(statusCodes.success);
+	   });
+    });
+    
+    describe('PurgeData', function() {
+	let _ = "";
+	it('returns `otherError` if the current access code is `00006`',
+	   function() {
+	       avclient.currentCode('00006');
+	       expect(avclient.PurgeData()).to.equal(statusCodes.otherError);
+	   });
+	if('returns `success` for everything else',
+	   function() {
+	       avclient.currentCode('999999');
+	       expect(avclient.PurgeData()).to.equal(statusCodes.success);
 	   });
     });
     

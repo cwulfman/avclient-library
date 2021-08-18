@@ -3,9 +3,9 @@
  */
 const statusCodes = {
     success: 'success',
-    invalid: 'invalid',
-    networkError: 'network error',
-    expired: 'expired'
+    otherError: 'other error',
+    invalidAccessCode: 'invalid access code',
+    expiredAccessCode: 'expired access code',
 }
 
 exports.statusCodes = statusCodes;
