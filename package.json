@@ -12,6 +12,10 @@
         "documentation": "13.2.5",
         "flush-cache": "1.0.1",
         "jsdoc-to-markdown": "7.0.1",
+        "jsdoc-to-readme": "1.0.3",
         "mocha": "9.0.2"
+    },
+    "dependencies": {
+        "jsdoc": "3.6.7"
     }
 }

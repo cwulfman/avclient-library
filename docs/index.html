@@ -29,9 +29,9 @@
               
                 
                 <li><a
-                  href='#accesscoderequest'
+                  href='#new'
                   class="">
-                  AccessCodeRequest
+                  New
                   
                 </a>
                 
@@ -39,9 +39,9 @@
               
                 
                 <li><a
-                  href='#accesscodeconstruct'
+                  href='#requestaccesscode'
                   class="">
-                  AccessCodeConstruct
+                  RequestAccessCode
                   
                 </a>
                 
@@ -49,9 +49,29 @@
               
                 
                 <li><a
-                  href='#spoil'
+                  href='#validateaccesscode'
                   class="">
-                  Spoil
+                  ValidateAccessCode
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#constructballotcryptograms'
+                  class="">
+                  ConstructBallotCryptograms
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#spoilballotcryptograms'
+                  class="">
+                  SpoilBallotCryptograms
                   
                 </a>
                 
@@ -62,6 +82,26 @@
                   href='#send'
                   class="">
                   Send
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#purgedata'
+                  class="">
+                  PurgeData
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#statuscodes'
+                  class="">
+                  statusCodes
                   
                 </a>
                 
@@ -92,23 +132,21 @@
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='accesscoderequest'>
-      AccessCodeRequest
+    <h3 class='fl m0' id='new'>
+      New
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/614a59591391a167a0e26040c1fd40aac1ea02be/src/avclient.js#L17-L22'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L10-L12'>
       <span>src/avclient.js</span>
       </a>
     
   </div>
   
 
-  <p>Request that an access code be sent to the user
-(outside of th app; e.g. email), based on Voter's
-input data.</p>
+  <p>Provide a URL for the library to use</p>
 
-    <div class='pre p1 fill-light mt0'>new AccessCodeRequest(firstName: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, lastName: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, dob: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, idNo: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+    <div class='pre p1 fill-light mt0'>new New(URL: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): any</div>
   
   
 
@@ -125,38 +163,8 @@ input data.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>firstName</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
-	    voter's first name field
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>lastName</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
-	    voter's last name field
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>dob</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
-	    voter's date of birth field
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>idNo</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
-	    either the ID number the voter used before
-(DLN, state ID, SSN) or, if no ID number was provided, then
-the voter record ID number returned by the previous lookup call.
-
+            <span class='code bold'>URL</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
           </div>
           
         </div>
@@ -169,8 +177,8 @@ the voter record ID number returned by the previous lookup call.
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
-        status (success or network error)
+      <code>any</code>:
+        true
 
       
     
@@ -199,22 +207,192 @@ the voter record ID number returned by the previous lookup call.
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='accesscodeconstruct'>
-      AccessCodeConstruct
+    <h3 class='fl m0' id='requestaccesscode'>
+      RequestAccessCode
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/614a59591391a167a0e26040c1fd40aac1ea02be/src/avclient.js#L31-L57'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L23-L28'>
       <span>src/avclient.js</span>
       </a>
     
   </div>
   
 
-  <p>If an input access code is valid, constructs crypto-ballot stuff
-under the covers and returns a ballot fingerprint.</p>
+  <p>Request that an access code be sent to the user (outside of th app;
+e.g. email), based on Voter’s ID# is either (a) the ID number the
+voter used before (DLN, state ID, SSN) or (b) if no ID# was
+provided, then provide the voter record ID number returned by the
+previous lookup call.</p>
 
-    <div class='pre p1 fill-light mt0'>new AccessCodeConstruct(CVR: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, accessCode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></div>
+    <div class='pre p1 fill-light mt0'>new RequestAccessCode(IDnumber: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>IDnumber</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Voter's ID number
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        status (success or otherError)
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='validateaccesscode'>
+      ValidateAccessCode
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L35-L46'>
+      <span>src/avclient.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Validate an access code</p>
+
+    <div class='pre p1 fill-light mt0'>new ValidateAccessCode(accessCode: any, accesCode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accessCode</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>accesCode</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        statuscode
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='constructballotcryptograms'>
+      ConstructBallotCryptograms
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L61-L74'>
+      <span>src/avclient.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Constructs crypto-ballot stuff under the covers,
+and returns a ballot fingerprint if return status is "success".
+Stub Functionality: Any string will do for the CVR, which is not used in
+the stub.  If the access code from the previous call is 00003
+return status of “otherError”, and empty fingerprint.  Otherwise
+return Status of “success” and a fingerprint that is either of two
+values, depending on prior calls; whichever one was returned
+previously, use the other one zyx098-wvu765-tsr432-1234 or
+tsr432-wvu765-zyx098-4321</p>
+
+    <div class='pre p1 fill-light mt0'>new ConstructBallotCryptograms(CVR: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></div>
   
   
 
@@ -232,14 +410,6 @@ under the covers and returns a ballot fingerprint.</p>
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>CVR</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>accessCode</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
 	    
           </div>
           
@@ -283,12 +453,12 @@ under the covers and returns a ballot fingerprint.</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='spoil'>
-      Spoil
+    <h3 class='fl m0' id='spoilballotcryptograms'>
+      SpoilBallotCryptograms
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/614a59591391a167a0e26040c1fd40aac1ea02be/src/avclient.js#L81-L90'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L96-L103'>
       <span>src/avclient.js</span>
       </a>
     
@@ -298,7 +468,7 @@ under the covers and returns a ballot fingerprint.</p>
   <p>Purpose: input a ballot fingerprint to invalidate
 (aka spoil)</p>
 
-    <div class='pre p1 fill-light mt0'>new Spoil(fingerPrint: any, fingerprint: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+    <div class='pre p1 fill-light mt0'>new SpoilBallotCryptograms(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
   
   
 
@@ -309,27 +479,6 @@ under the covers and returns a ballot fingerprint.</p>
   
   
 
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>fingerPrint</span> <code class='quiet'>(any)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>fingerprint</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
   
 
   
@@ -338,7 +487,7 @@ under the covers and returns a ballot fingerprint.</p>
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
-        status (success/invalid/networkError)
+        status (success/otherError)
 
       
     
@@ -372,17 +521,16 @@ under the covers and returns a ballot fingerprint.</p>
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/614a59591391a167a0e26040c1fd40aac1ea02be/src/avclient.js#L100-L109'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L110-L117'>
       <span>src/avclient.js</span>
       </a>
     
   </div>
   
 
-  <p>Purpose: input a ballot fingerprint of a ballot to send, along with
-a couple files</p>
+  <p>Purpose: add a PDF file to the ballot, and send them</p>
 
-    <div class='pre p1 fill-light mt0'>new Send(fingerprint: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, affidavitPDF: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, ballotPDF: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+    <div class='pre p1 fill-light mt0'>new Send(fingerprint: any, affidavitPDF: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, ballotPDF: any): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
   
   
 
@@ -399,7 +547,7 @@ a couple files</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>fingerprint</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+            <span class='code bold'>fingerprint</span> <code class='quiet'>(any)</code>
 	    
           </div>
           
@@ -415,7 +563,7 @@ a couple files</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>ballotPDF</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+            <span class='code bold'>ballotPDF</span> <code class='quiet'>(any)</code>
 	    
           </div>
           
@@ -459,12 +607,129 @@ a couple files</p>
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='purgedata'>
+      PurgeData
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/avclient.js#L123-L130'>
+      <span>src/avclient.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Call to tell library to purge data</p>
+
+    <div class='pre p1 fill-light mt0'>new PurgeData(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        status (success or otherError)
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='statuscodes'>
       statusCodes
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/614a59591391a167a0e26040c1fd40aac1ea02be/src/statuscodes.js#L4-L9'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/statusCodes.js#L4-L9'>
+      <span>src/statusCodes.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>statusCodes is an object representing the various status codes
+returned by the av client</p>
+
+    <div class='pre p1 fill-light mt0'>statusCodes</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='statuscodes'>
+      statusCodes
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/cwulfman/avclient-stub-library/blob/22bb4ed1a8e57503a6a1292c626305afd06ab859/src/statuscodes.js#L4-L9'>
       <span>src/statuscodes.js</span>
       </a>
     
