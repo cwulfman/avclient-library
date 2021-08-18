@@ -2,93 +2,129 @@
 
 ### Table of Contents
 
-*   [AccessCodeRequest][1]
+*   [New][1]
     *   [Parameters][2]
-*   [AccessCodeConstruct][3]
+*   [RequestAccessCode][3]
     *   [Parameters][4]
-*   [Spoil][5]
+*   [ValidateAccessCode][5]
     *   [Parameters][6]
-*   [Send][7]
+*   [ConstructBallotCryptograms][7]
     *   [Parameters][8]
-*   [statusCodes][9]
+*   [SpoilBallotCryptograms][9]
+*   [Send][10]
+    *   [Parameters][11]
+*   [PurgeData][12]
+*   [statusCodes][13]
 
-## AccessCodeRequest
+## New
 
-Request that an access code be sent to the user
-(outside of th app; e.g. email), based on Voter's
-input data.
-
-### Parameters
-
-*   `firstName` **[string][10]** voter's first name field
-*   `lastName` **[string][10]** voter's last name field
-*   `dob` **[string][10]** voter's date of birth field
-*   `idNo` **[string][10]** either the ID number the voter used before
-    (DLN, state ID, SSN) or, if no ID number was provided, then
-    the voter record ID number returned by the previous lookup call.
-
-Returns **[string][10]** status (success or network error)
-
-## AccessCodeConstruct
-
-If an input access code is valid, constructs crypto-ballot stuff
-under the covers and returns a ballot fingerprint.
+Provide a URL for the library to use
 
 ### Parameters
 
-*   `CVR` **[string][10]** 
-*   `accessCode` **[string][10]** 
+*   `URL` **[string][14]** 
 
-Returns **[object][11]** Status, Fingerprint
+Returns **any** true
 
-## Spoil
+## RequestAccessCode
+
+Request that an access code be sent to the user (outside of th app;
+e.g. email), based on Voter’s ID# is either (a) the ID number the
+voter used before (DLN, state ID, SSN) or (b) if no ID# was
+provided, then provide the voter record ID number returned by the
+previous lookup call.
+
+### Parameters
+
+*   `IDnumber` **[string][14]** Voter's ID number
+
+Returns **[string][14]** status (success or otherError)
+
+## ValidateAccessCode
+
+Validate an access code
+
+### Parameters
+
+*   `accessCode`  
+*   `accesCode` **[string][14]** 
+
+Returns **[string][14]** statuscode
+
+## ConstructBallotCryptograms
+
+Constructs crypto-ballot stuff under the covers,
+and returns a ballot fingerprint if return status is "success".
+Stub Functionality: Any string will do for the CVR, which is not used in
+the stub.  If the access code from the previous call is 00003
+return status of “otherError”, and empty fingerprint.  Otherwise
+return Status of “success” and a fingerprint that is either of two
+values, depending on prior calls; whichever one was returned
+previously, use the other one zyx098-wvu765-tsr432-1234 or
+tsr432-wvu765-zyx098-4321
+
+### Parameters
+
+*   `CVR` **[string][14]** 
+
+Returns **[object][15]** Status, Fingerprint
+
+## SpoilBallotCryptograms
 
 Purpose: input a ballot fingerprint to invalidate
 (aka spoil)
 
-### Parameters
-
-*   `fingerPrint`  
-*   `fingerprint` **[string][10]** 
-
-Returns **[string][10]** status (success/invalid/networkError)
+Returns **[string][14]** status (success/otherError)
 
 ## Send
 
-Purpose: input a ballot fingerprint of a ballot to send, along with
-a couple files
+Purpose: add a PDF file to the ballot, and send them
 
 ### Parameters
 
-*   `fingerprint` **[string][10]** 
-*   `affidavitPDF` **[string][10]** 
-*   `ballotPDF` **[string][10]** 
+*   `fingerprint`  
+*   `affidavitPDF` **[string][14]** 
+*   `ballotPDF`  
 
-Returns **[string][10]** status
+Returns **[string][14]** status
+
+## PurgeData
+
+Call to tell library to purge data
+
+Returns **[string][14]** status (success or otherError)
 
 ## statusCodes
 
 statusCodes is an object representing the various status codes
 returned by the av client
 
-[1]: #accesscoderequest
+[1]: #new
 
 [2]: #parameters
 
-[3]: #accesscodeconstruct
+[3]: #requestaccesscode
 
 [4]: #parameters-1
 
-[5]: #spoil
+[5]: #validateaccesscode
 
 [6]: #parameters-2
 
-[7]: #send
+[7]: #constructballotcryptograms
 
 [8]: #parameters-3
 
-[9]: #statuscodes
+[9]: #spoilballotcryptograms
 
-[10]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[10]: #send
 
-[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[11]: #parameters-4
+
+[12]: #purgedata
+
+[13]: #statuscodes
+
+[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[15]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
