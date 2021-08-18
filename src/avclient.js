@@ -33,6 +33,7 @@ function RequestAccessCode(IDnumber) {
  * @return {string} statuscode
  */
 function ValidateAccessCode(accessCode) {
+    currentCode(accessCode);
     switch(accessCode) {
     case '00000':
 	return statusCodes.invalidAccessCode;
