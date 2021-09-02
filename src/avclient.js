@@ -1,142 +1,105 @@
 // avclient.js
+const statusCodes = require('./statusCodes').statusCodes;
 
-const statusCodes = require('./statusCodes').statusCodes
+class AVClient {
 
-/**
- * Provide a URL for the library to use
- * @param {string} URL
- * @returns true
- */
-function New(URL) {
-    return true
-}
-
-/**
- * Request that an access code be sent to the user (outside of th app;
- * e.g. email), based on Voter’s ID# is either (a) the ID number the
- * voter used before (DLN, state ID, SSN) or (b) if no ID# was
- * provided, then provide the voter record ID number returned by the
- * previous lookup call.
- * @param {string} IDnumber Voter's ID number
- * @returns {string} status (success or otherError)
- */
-function RequestAccessCode(IDnumber) {
-    if (IDnumber.match(/^0+$/))
-	return statusCodes.otherError
-    else
-	return statusCodes.success
-}
-
-/**
- * Validate an access code
- * @param {string} accesCode
- * @return {string} statuscode
- */
-function ValidateAccessCode(accessCode) {
-    currentCode(accessCode);
-    switch(accessCode) {
-    case '00000':
-	return statusCodes.invalidAccessCode;
-    case '00001':
-	return statusCodes.expiredAccessCode;
-    case '00002':
-	return statusCodes.otherError;
-    default:
-	return statusCodes.success;
+    constructor(bulletinBoardURL) {
+	this.serverURL = bulletinBoardURL;
     }
-}
 
-/**
- * Constructs crypto-ballot stuff under the covers,
- * and returns a ballot fingerprint if return status is "success".
- * Stub Functionality: Any string will do for the CVR, which is not used in
- * the stub.  If the access code from the previous call is 00003
- * return status of “otherError”, and empty fingerprint.  Otherwise
- * return Status of “success” and a fingerprint that is either of two
- * values, depending on prior calls; whichever one was returned
- * previously, use the other one zyx098-wvu765-tsr432-1234 or
- * tsr432-wvu765-zyx098-4321
- * @param {string} CVR
- * @returns {object} Status, Fingerprint
- */
-function ConstructBallotCryptograms(CVR) {
-    let status;
-    let fingerprint;
-    switch(currentCode()) {
-    case '00003':
-	return {'status': statusCodes.otherError,
-		'fingerprint': ''};
-	break;
-    default:
-	return {'status': statusCodes.success,
-		'fingerprint': nextFP()};
-	break;
+    purgeData() {
+	delete this.cachedAccessCode;
     }
-}
 
-const currentCode = (function(code) {
-    var stashed = '';
-    return function(code) {
-	if (code)
-	    stashed = code;
-	return stashed; };
-}())
-
-const nextFP = (function() {
-    var counter = 0;
-    var fingerprints = ['zyx098-wvu765-tsr432-1234',
-			'tsr432-wvu765-zyx098-4321'];
-    return function() { return fingerprints[counter++ % 2]; };
-}())
-
-/**
- * Purpose: input a ballot fingerprint to invalidate
- * (aka spoil)
- * @return {string} status (success/otherError)
- */
-function SpoilBallotCryptograms() {
-    switch(currentCode()) {
-    case '00004':
-	return statusCodes.otherError;
-    default:
-	return statusCodes.success;
+    requestAccessCode(opaqueVoterId) {
+	return new Promise((resolve, reject) => {
+	    switch(opaqueVoterId) {
+	    case '00000':
+		reject(new Error(statusCodes.VoterRecordNotFound));
+	    case '00001':
+		reject(new Error(statusCodes.NetworkError));
+	    default:
+		resolve();
+	    }
+	})
     }
-}
 
-/**
- * Purpose: add a PDF file to the ballot, and send them
- * @param {string} affidavitPDF
- * @return {string} status
- */
-function SendBallotCryptograms(affidavitPDF) {
-    switch(currentCode()) {
-    case '00005':
-	return {"status": statusCodes.otherError,
-		"receipt": ''};
-    default:
-	return {"status": statusCodes.success,
-		"receipt": 'AdBoCr1e2m3i'}
+    validateAccessCode(code, email) {
+	return new Promise((resolve, reject) => {
+	    this.cachedAccessCode = code
+	    switch(code) {
+	    case '00002':
+		reject(new Error(statusCodes.CallOutOfOrderError));
+	    case '00003':
+		reject(new Error(statusCodes.AccessCodeExpired));
+	    case '00004':
+		reject(new Error(statusCodes.AccessCodeInvalid));
+	    case '00005':
+		reject(new Error(statusCodes.NetworkError));
+	    default:
+		resolve();
+	    }
+	})
     }
-}
 
-/**
- * Call to tell library to purge data
- * @return {string} status (success or otherError)
- */
-function PurgeData() {
-    switch(currentCode()) {
-    case '00006':
-	return statusCodes.otherError;
-    default:
-	return statusCodes.success;
+    // Should not be idempotent.  Instead, permute one of
+    // john's sample strings.
+    constructBallotCryptograms(cvr) {
+	return new Promise((resolve, reject) => {
+	    switch(this.cachedAccessCode) {
+	    case '00006':
+		reject(new Error(statusCodes.CallOutOfOrderError));
+	    case '00007':
+		reject(new Error(statusCodes.NetworkError));
+	    case '00008':
+		reject(new Error(statusCodes.CorruptCVRError));
+	    default:
+		resolve('zyx098-wvu765-tsr432-1234');
+	    }
+	})
     }
-}
 
-exports.New = New;
-exports.RequestAccessCode = RequestAccessCode;
-exports.ValidateAccessCode = ValidateAccessCode;
-exports.ConstructBallotCryptograms = ConstructBallotCryptograms;
-exports.SpoilBallotCryptograms = SpoilBallotCryptograms;
-exports.SendBallotCryptograms = SendBallotCryptograms;
-exports.PurgeData = PurgeData;
-exports.currentCode = currentCode;
+    spoilBallotCryptograms() {
+	return new Promise((resolve, reject) => {
+	    switch(this.cachedAccessCode) {
+	    case '00009':
+		reject(new Error(statusCodes.CallOutOfOrderError));
+	    case '00010':
+		reject(new Error(statusCodes.NetworkError));
+	    case '00011':
+		reject(new Error(statusCodes.ServerCommitmentError));
+	    default:
+		resolve();
+	    }
+	})
+    }
+
+    submitBallotCryptograms() {
+	return new Promise((resolve, reject) => {
+	    switch(this.cachedAccessCode) {
+	    case '00012':
+		reject(new Error(statusCodes.NetworkError));
+	    default:
+		resolve({
+		    previousBoardHash: 'tsr432-wvu765-zyx098-4321',
+		    boardHash: 'zyx098-wvu765-tsr432-1234',
+		    registeredAt: '2020-03-01T10:00:00.000+01:00',
+		    serverSignature: 'dbcce518142b8740a5c911f727f3c02829211a8ddfccabeb89297877e4198bc1,46826ddfccaac9ca105e39c8a2d015098479624c411b4783ca1a3600daf4e8fa',
+		    voteSubmissionId: 6
+		})
+	    }
+	});
+    }
+
+    test(code) {
+	this.purgeData();
+	this.requestAccessCode(code);
+	this.validateAccessCode(code);
+	this.constructBallotCryptograms();
+	this.spoilBallotCryptograms();
+	this.constructBallotCryptograms();
+	this.submitBallotCryptograms().then(receipt => {console.log(receipt)});
+    }
+};
+
+module.exports = AVClient;

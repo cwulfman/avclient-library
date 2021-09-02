@@ -1,97 +1,192 @@
-const avclient = require('../src/avclient');
+const AVClient = require('../src/avclient');
 const statusCodes = require('../src/statusCodes').statusCodes;
 const expect = require('chai').expect;
 
-describe('avclient', function () {
-    describe('New', function() {
-	it('returns true', function() {
-	    expect(avclient.New("anything")).to.be.true;
+describe('AVClient', function () {
+    describe('constructor', function() {
+	it('throws an AVClient', function() {
+	    let client = new AVClient('someURL');
+	    expect(client.serverURL).to.equal('someURL');
 	});
     });
 
-    describe('RequestAccessCode', function () {
-	it('returns `other error` if ID# is all zeros', function() {
-	    expect(avclient.RequestAccessCode('0')).to.equal(statusCodes.otherError);
-	    expect(avclient.RequestAccessCode('000')).to.equal(statusCodes.otherError);
+    describe('requestAccessCode', function() {
+	it('throws VoterRecordNotFound if voter id is 00000', function() {
+	    let client = new AVClient('someURL');
+	    let opaqueVoterId = '00000';
+	    return client.requestAccessCode(opaqueVoterId).catch(e => {
+		expect(e.message).to.equal(statusCodes.VoterRecordNotFound);
+	    });
+	});
+	it('throws NetworkError if voter id is 00001', function() {
+	    let client = new AVClient('someURL');
+	    let opaqueVoterId = '00001';
+	    return client.requestAccessCode(opaqueVoterId).catch(e => {
+		expect(e.message).to.equal(statusCodes.NetworkError);
+	    });
+	});
+	it('returns undefined otherwise', function() {
+	    let client = new AVClient('someURL');
+	    let opaqueVoterId = '12345';
+	    return client.requestAccessCode(opaqueVoterId).then(r => {
+		expect(r).to.be.undefined;
+	    });
 	});
 
-	it('returns `success` otherwise', function () {
-	    expect(avclient.RequestAccessCode('12345')).to.equal(statusCodes.success);
+    });
+
+    describe('validateAccessCode', function() {
+	it('throws CallOutOfOrder if OTP code is 00002', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00002';
+	    return client.validateAccessCode(code, '').catch(e => {
+		expect(e.message).to.equal(statusCodes.CallOutOfOrderError);
+	    });
+	});
+	it('throws AccessCodeExpired if OTP code is 00003', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00003';
+	    return client.validateAccessCode(code, '').catch(e => {
+		expect(e.message).to.equal(statusCodes.AccessCodeExpired);
+	    });
+	});
+	it('throws AccessCodeInvalid if OTP code is 00004', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00004';
+	    return client.validateAccessCode(code, '').catch(e => {
+		expect(e.message).to.equal(statusCodes.AccessCodeInvalid);
+	    });
+	});
+	it('throws NetworkError if OTP code is 00005', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00005';
+	    return client.validateAccessCode(code, '').catch(e => {
+		expect(e.message).to.equal(statusCodes.NetworkError);
+	    });
+	});
+	it('returns undefined otherwise', function() {
+	    let client = new AVClient('someURL');
+	    let code = '12345';
+	    return client.validateAccessCode(code, '').then(r => {
+		expect(r).to.be.undefined;
+		expect(client.cachedAccessCode).to.equal('12345');
+	    });
 	});
     });
 
-    describe('ValidateAccessCode', function () {
-	it('returns invalidAccessCode if accessCode is 00000', function() {
-	    expect(avclient.ValidateAccessCode('00000')).to.equal(statusCodes.invalidAccessCode);
+    describe('constructBallotCryptograms', function() {
+	it('throws CallOutOfOrderError if prior code was 00006', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00006';
+	    let cvr = { '1': 'option1', '2': 'optiona' };
+	    client.validateAccessCode(code, '');
+	    return client.constructBallotCryptograms(cvr).catch(e => {
+		expect(e.message).to.equal(statusCodes.CallOutOfOrderError);
+	    });
 	});
-	it('returns expiredAccessCode if accessCode is 00001', function() {
-	    accessCode = '00001'
-	    expectedStatus = statusCodes.expiredAccessCode;
-	    expect(avclient.ValidateAccessCode(accessCode)).to.equal(expectedStatus);
-	})
 
+	it('throws NetworkError if prior code was 00007', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00007';
+	    let cvr = { '1': 'option1', '2': 'optiona' };
+	    client.validateAccessCode(code, '');
+	    return client.constructBallotCryptograms(cvr).catch(e => {
+		expect(e.message).to.equal(statusCodes.NetworkError);
+	    });
+	});
+
+	it('throws CorruptCVRError if prior code was 00008', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00008';
+	    let cvr = { '1': 'option1', '2': 'optiona' };
+	    client.validateAccessCode(code, '');
+	    return client.constructBallotCryptograms(cvr).catch(e => {
+		expect(e.message).to.equal(statusCodes.CorruptCVRError);
+	    });
+	});
+
+	it('returns a fingerprint otherwise', function() {
+	    let client = new AVClient('someURL');
+	    let code = '12345';
+	    let cvr = { '1': 'option1', '2': 'optiona' };
+	    client.validateAccessCode(code, '');
+	    return client.constructBallotCryptograms(cvr).then(fingerprint => {
+		expect(fingerprint).to.equal('zyx098-wvu765-tsr432-1234');
+	    });
+	});
     });
 
-    describe('ConstructBallotCryptograms', function() {
-	it('returns otherError for code 00003', function() {
-	    avclient.currentCode('00003');	    
-	    expect(avclient.ConstructBallotCryptograms('').status).to.equal(statusCodes.otherError);
+    describe('spoilBallotCryptograms', function() {
+	it('throws CallOutOfOrder if prior code was 00009 and returns undefined', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00009';
+	    client.validateAccessCode(code, '');
+	    return client.spoilBallotCryptograms().then(r => {
+		expect(r).to.be.undefined; }).catch(e => {
+		expect(e.message).to.equal(statusCodes.CallOutOfOrderError);
+	    });
 	});
-	it('returns success for anything else (not exhaustively tested)', function() {
-	    avclient.currentCode('00001');	    
-	    expectedStatus = statusCodes.success;
-	    expect(avclient.ConstructBallotCryptograms('').status).to.equal(expectedStatus);
+
+	it('throws NetworkError if prior code was 00010 and returns undefined', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00010';
+	    client.validateAccessCode(code, '');
+	    return client.spoilBallotCryptograms().then(r => {
+		expect(r).to.be.undefined; }).catch(e => {
+		expect(e.message).to.equal(statusCodes.NetworkError);
+	    });
+	});
+
+	it('throws ServerCommitmentError if prior code was 00011 and returns undefined', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00011';
+	    client.validateAccessCode(code, '');
+	    return client.spoilBallotCryptograms().then(r => {
+		expect(r).to.be.undefined; }).catch(e => {
+		expect(e.message).to.equal(statusCodes.ServerCommitmentError);
+	    });
+	});
+
+	it('returns undefined otherwise', function() {
+	    let client = new AVClient('someURL');
+	    let code = '12345';
+	    client.validateAccessCode(code, '');
+	    return client.spoilBallotCryptograms().then(r => {
+		expect(r).to.be.undefined;
+	    });
 	});
     });
 
-    describe('SpoilBallotCryptograms', function() {
-	it('returns otherError if statusCode is 00004', function() {
-	    avclient.currentCode('00004')
-	    expectedStatus = statusCodes.otherError;
-	    expect(avclient.SpoilBallotCryptograms(accessCode)).to.equal(expectedStatus);
+    describe('submitBallotCryptograms', function() {
+	it('throws NetworkError if prior code was 00012', function() {
+	    let client = new AVClient('someURL');
+	    let code = '00012';
+	    client.validateAccessCode(code, '');
+	    return client.submitBallotCryptograms().catch(e => {
+		expect(e.message).to.equal(statusCodes.NetworkError);
+	    });
 	});
-	it('returns success for anything else (not exhaustively tested)', function() {
-	    avclient.currentCode('00000')
-	    expectedStatus = statusCodes.success;
-	    expect(avclient.SpoilBallotCryptograms(accessCode)).to.equal(expectedStatus);
+
+	it('returns a vote receipt otherwise', function() {
+	    let client = new AVClient('someURL');
+	    let code = '12345';
+	    client.validateAccessCode(code, '');
+	    return client.submitBallotCryptograms().then(r => {
+		expect(r.boardHash).to.equal('zyx098-wvu765-tsr432-1234');
+	    });
 	});
     });
 
-    describe('SendBallotCryptograms', function() {
-	let _ = "";
-	it('returns `otherError` if the current access code is `00005`',
-	   function() {
-	       avclient.currentCode('00005');
-	       result = avclient.SendBallotCryptograms(_);
-	       expect(result.status).to.equal(statusCodes.otherError);
-	   });
-	if('returns `success` for everything else',
-	   function() {
-	       avclient.currentCode('999999');
-	       result = avclient.SendBallotCryptograms(_);
-	       expect(result.status).to.equal(statusCodes.success);
-	       expect(result.recept).to.equal('AdBoCr1e2m3i');
-	   });
-    });
-    
-    describe('PurgeData', function() {
-	let _ = "";
-	it('returns `otherError` if the current access code is `00006`',
-	   function() {
-	       avclient.currentCode('00006');
-	       expect(avclient.PurgeData()).to.equal(statusCodes.otherError);
-	   });
-	if('returns `success` for everything else',
-	   function() {
-	       avclient.currentCode('999999');
-	       expect(avclient.PurgeData()).to.equal(statusCodes.success);
-	   });
-    });
-    
-    describe('currentCode', function() {
-	it('returns stashed value', function() {
-	    avclient.currentCode('123');	    
-	    expect(avclient.currentCode()).to.equal('123');
+    describe('purgeData', function() {
+	it('deletes the serverURL and cachedAccessCode properties of the stub', function() {
+	    let client = new AVClient('someURL');
+	    let code = '12345';
+	    client.validateAccessCode(code, '');
+	    expect(client.serverURL).to.equal('someURL');
+	    expect(client.cachedAccessCode).to.equal('12345');
+	    client.purgeData();
+	    expect(client.serverURL).to.equal('someURL');
+	    expect(client.cachedAccessCode).to.be.undefined;
 	});
     });
 });
