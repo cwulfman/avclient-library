@@ -1,51 +1,27 @@
-# AV Client Library Stub Implementation
+# Avclient
 
-This module is a stub implementation of the Assembly Voting Client API.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.7.
 
-## Prequisites
+## Development server
 
-*   [NodeJS](https://nodejs.org/en/)
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Installation
+## Code scaffolding
 
-*   Clone this repository wherever you like.
-*   Run `npm install` to install dependencies.
-*   Run `npm test` to test.
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Codes for Testing
+## Build
 
-The method stubs return values and throw errors based on a sequence of testing codes.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-- **00000**: `requestAccessCode(00000)` throws VoterRecordNotFound error
-- **00001**: `requestAccessCode(00001)` throws NetworkError.
-- **00002**: `validateAccessCode(00002)` throws CallOutOfOrderError.
-- **00003**: `validateAccessCode(00003)` throws AccessCodeExpired error.
-- **00004**: `validateAccessCode(00004)` throws AccessCodeInvalid error.
-- **00005**: `validateAccessCode(00005)` throws NetworkError.
+## Running unit tests
 
-Validating the following codes will trigger errors later in the workflow.
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-- **00006**: `constructBallotCryptograms()` throws CallOutOfOrderError.
-- **00007**: `constructBallotCryptograms()` throws NetworkError.
-- **00008**: `constructBallotCryptograms()` throws CorruptCVError.
-- **00009**: `spoilBallotCryptograms()` throws CallOutOfOrderError.
-- **00010**: `spoilBallotCryptograms()` throws NetworkError.
-- **00011**: `spoilBallotCryptograms()` throws ServerCommitmentError.
-- **00012**: `submitBallotCryptograms()` throws NetworkError
+## Running end-to-end tests
 
-## Testing the Flow
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-AVClient.test(code) simulates running the entire workflow using a code.
+## Further help
 
-First it purges any cached data, then it invokes the methods in flow order.  It 
-calls `constructBallotCryptograms()` twice: once after validating the code, and again
-after spoiling the cryptograms.
-
-```js
-const AVClient = require('./src/avclient');
-const client = new AVClient('http://exampleserver.org');
-client.test('00000');
-client.test('00005');
-client.test('12345');
-
-```
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
