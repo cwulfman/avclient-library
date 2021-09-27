@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientComponent } from './client/client.component';
 import { AvclientService } from './avclient.service';
+import { VoterArtifactsService } from './voterartifacts.service';
 
 
 @NgModule({
@@ -15,9 +16,10 @@ import { AvclientService } from './avclient.service';
     imports: [
 	BrowserModule,
 	AppRoutingModule,
-	AvclientService
+	AvclientService,
+	VoterArtifactsService
     ],
-  providers: [AvclientService],
+    providers: [AvclientService, VoterArtifactsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
