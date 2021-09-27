@@ -1,7 +1,7 @@
 require('fs');
 
 
-const simulatedValues = {
+bconst simulatedValues = {
     precinct_1: {
 	cvr: fs.readFileSync('./src/files/port_precinct1/jetsons_port_precinct1_cvr.xml', 'utf-8'),
 	affidavit: fs.readFileSync('./src/files/port_precinct1/precinct1_voter_affidavit.pdf', 'base64'),
